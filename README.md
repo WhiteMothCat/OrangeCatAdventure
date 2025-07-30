@@ -13,3 +13,5 @@ This repository was created to let people try out my game and give me some advic
 - WASD keys for movement.
 - ENTER for attacking, interacting (dialogues or NPCs) and selecting.
 - P to pause the game.
+- C to see the chracter stats.
+- Protip: if ENTER and W are both pressed at the same time over yellow flowers the character regenerates it's life.
