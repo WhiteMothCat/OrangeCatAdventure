@@ -12,7 +12,6 @@ public class Player extends Entity{
 	
 	KeyHandler keyH;
 	public final int screenX, screenY;
-	public boolean attackCanceled = false;
 	
 	public Player(GamePanel gp, KeyHandler keyH) {
 		
@@ -129,16 +128,6 @@ public void getPlayerAttackImage() {
 				case "right": worldX += speed; break;
 				}
 			}
-			
-			// PLAYER ATTACK
-			if (gp.keyH.enterPressed == true && attackCanceled == false) {
-				gp.playSE(8);
-				attacking = true;
-				spriteCounter = 0;
-			}
-			
-			// reset values
-			attackCanceled = false;
 			gp.keyH.enterPressed = false;
 			
 			spriteCounter++; // animation and sprite number
@@ -242,9 +231,12 @@ public void getPlayerAttackImage() {
 		
 		if(gp.keyH.enterPressed == true) { // when you press enter
 			if (i != -1) { // in the video puts 999 instead of -1
-				attackCanceled = true;
 				gp.gameState = gp.dialogueState; // shows the dialogue
 				gp.npc[i].speak();
+			}
+			else { // the player attacks
+				attacking = true;
+				gp.playSE(8);
 			}
 		}
 	}
