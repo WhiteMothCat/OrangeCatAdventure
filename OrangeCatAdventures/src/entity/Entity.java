@@ -15,9 +15,8 @@ import main.UtilityTool;
 public class Entity { // stores variables that will be used in player, monster and NPC classes
 	
 	GamePanel gp;
-	// MOVEMENT
+	// POSITION
 	public int worldX, worldY;
-	public int speed;
 	// SPRITES
 	public BufferedImage up1, up2, left1, left2, right1, right2, down1, down2; // describes an image with an accessible buffer of image data (used to store image files)
 	public BufferedImage attackUp1, attackUp2, attackDown1, attackDown2, attackRight1, attackRight2, attackLeft1, attackLeft2; // sprites for attack animation
@@ -28,29 +27,44 @@ public class Entity { // stores variables that will be used in player, monster a
 	public int solidAreaDefaultX, solidAreaDefaultY;
 	public boolean collisionOn = false;
 	public Rectangle attackArea = new Rectangle(0, 0, 0, 0);
+	public boolean collision = false; // for setting a collision
 	// DIALOGUE
 	public String dialogues[] = new String[20];
 	int dialogueIndex = 0;
-	// STATUS
+	// ENTITY ATTRIBUTES
+	public int type; // 0 -> player, 1 -> npc, 2 -> monster, 3 -> object
 	public int maxLife;
 	public int life;
+	public int speed;
+	public int level;
+	public int strength;
+	public int dexterity;
+	public int attack;
+	public int defense;
+	public int exp;
+	public int nextLevelExp;
+	public int coin;
+	public Entity currentWeapon;
+	public Entity currentShield;
+	// ENTITY STATUS
 	public boolean invincible = false;
 	public boolean attacking = false;
 	public boolean alive = true;
 	public boolean dying = false;
 	public boolean hpBarOn = false;
-	// COUNTER
+	// COUNTERS
 	public int actionLockCounter = 0;
 	public int spriteCounter = 0;
 	public int invincibleCounter = 0;
 	int dyingCounter = 0;
 	int hpBarCounter = 0;
-	// OBJECT DATA
+	// OBJECT ATTRIBUTES
 	public BufferedImage image, image2, image3; // adding an image
 	public String name; // name of the object
-	public boolean collision = false; // for setting a collision
-	// CHECK ENTITY
-	public int type; // 0 -> player, 1 -> npc, 2 -> monster, 3 -> object
+	// ITEM ATTRIBUTES
+	public int attackValue;
+	public int defenseValue;
+	
 	
 	public Entity(GamePanel gp) {
 		this.gp = gp;

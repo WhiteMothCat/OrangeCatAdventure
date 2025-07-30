@@ -17,11 +17,11 @@ import tile.TileManager;
 // LIST OF THINGS TO ADD:
 // - Animation when there is no movement
 // - Fix the problem regarding the solid area of superObject
-// - Create title of game and dialogue sprites
+// - Create dialogue sprites
 // - Player animation when hit (not transparent)
 // - Different sound effect depending on which monster is hit
-// - When some monsters die the become NPCs (ex: CorruptedRat into Rat) or just change the dying animation (new sprites)
-// - Don't swing sword during dialogue or NPC/Object interaction
+// - When some monsters die they become NPCs (ex: CorruptedRat into Rat) or just change the dying animation (new sprites)
+// - Make a better character status window
 
 public class GamePanel extends JPanel implements Runnable{
 	
@@ -68,6 +68,7 @@ public class GamePanel extends JPanel implements Runnable{
 	public final int playState = 1;
 	public final int pauseState = 2;
 	public final int dialogueState = 3;
+	public final int characterState = 4;
 	
 	// CONSTRUCTOR
 	public GamePanel() {

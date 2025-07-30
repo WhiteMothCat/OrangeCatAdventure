@@ -7,11 +7,14 @@ import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import main.GamePanel;
 import main.KeyHandler;
+import object.OBJ_Shield_1;
+import object.OBJ_Weapon_1;
 
 public class Player extends Entity{
 	
 	KeyHandler keyH;
 	public final int screenX, screenY;
+	public boolean attackCanceled = false;
 	
 	public Player(GamePanel gp, KeyHandler keyH) {
 		
@@ -44,9 +47,27 @@ public class Player extends Entity{
 		worldY = gp.tileSize * 25; // y position on the world map
 		speed = 4;
 		direction = "down";
-		// player status
+		// player attributes
 		maxLife = 6;
 		life = maxLife;
+		level = 1;
+		strength = 0;
+		dexterity = 0;
+		exp = 0;
+		nextLevelExp = 5;
+		coin = 0; // broke :(
+		currentWeapon = new OBJ_Weapon_1(gp);
+		currentShield = new OBJ_Shield_1(gp);
+		attack = getAttack();
+		defense = getDefense();
+	}
+	
+	public int getAttack() { // calculates the attack value
+		return attack = strength + currentWeapon.attackValue; // in the video multiplies the value
+	}
+	
+	public int getDefense() { // calculates the defense value
+		return attack = dexterity + currentShield.defenseValue; // in the video multiplies the value
 	}
 	
 	public void getPlayerImage() {
@@ -128,6 +149,16 @@ public void getPlayerAttackImage() {
 				case "right": worldX += speed; break;
 				}
 			}
+			
+			// PLAYER ATTACK
+			if (gp.keyH.enterPressed == true && attackCanceled == false) {
+				gp.playSE(8);
+				attacking = true;
+				spriteCounter = 0;
+			}
+			
+			// reset values
+			attackCanceled = false;
 			gp.keyH.enterPressed = false;
 			
 			spriteCounter++; // animation and sprite number
@@ -231,12 +262,9 @@ public void getPlayerAttackImage() {
 		
 		if(gp.keyH.enterPressed == true) { // when you press enter
 			if (i != -1) { // in the video puts 999 instead of -1
+				attackCanceled = true;
 				gp.gameState = gp.dialogueState; // shows the dialogue
 				gp.npc[i].speak();
-			}
-			else { // the player attacks
-				attacking = true;
-				gp.playSE(8);
 			}
 		}
 	}

@@ -129,6 +129,7 @@ public class EventHandler {
 			gp.ui.currentDialogue = "The mystical waters of the pond restores \nyour life";
 			gp.player.life = gp.player.maxLife;
 			gp.playSE(3);
+			gp.player.attackCanceled = true;
 		}
 	}
 }
