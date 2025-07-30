@@ -1,6 +1,6 @@
 # Orange Cat Adventures
 
-This repository was created to let people play the Orange Cat Adventure videogame and give ideas about how to make it better.
+This repository was created to let people play the Orange Cat Adventure videogame and give ideas about how to make it better. This repository is public for viewing and downloading purposes only, please do not submit pull requests unless invited.
 
 ## How to run the game 🎮
 
