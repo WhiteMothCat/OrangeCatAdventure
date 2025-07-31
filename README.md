@@ -18,6 +18,11 @@ This repository was created to let people play the Orange Cat Adventure videogam
 - __C__ to see the character stats.
 - __Protip:__ if ENTER and W are both pressed at the same time over yellow flowers the character regenerates it's life.
 
+### Other controls for develpment only
+
+- __T__ to see the debug messages.
+- __R__ to reload the map in case it got some adjustments during the running of the game (used only for debugging).
+
 ### Future implementations
 
 - Add an actual tutorial to the game.
@@ -27,4 +32,6 @@ Any ideas could be proposed to add to the game.
 
 ## License and creator 💾
 
+Game author (of all the code, sprites and music implemented): WhiteMothCat.
+Development tutorials: _https://youtu.be/om59cwR7psI?si=_QfdboNdn0w9bJly_ (thanks to RyiSnow).
 Check out the license file for more information related to the __terms and conditions__.
