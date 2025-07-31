@@ -33,5 +33,7 @@ Any ideas could be proposed to add to the game.
 ## License and creator 💾
 
 Game author (of all the code, sprites and music implemented): WhiteMothCat.
+
 Development tutorials: _https://youtu.be/om59cwR7psI?si=_QfdboNdn0w9bJly_ (thanks to RyiSnow).
+
 Check out the license file for more information related to the __terms and conditions__.
