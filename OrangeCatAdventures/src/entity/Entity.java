@@ -32,9 +32,11 @@ public class Entity { // stores variables that will be used in player, monster a
 	public String dialogues[] = new String[20];
 	int dialogueIndex = 0;
 	// ENTITY ATTRIBUTES
-	public int type; // 0 -> player, 1 -> npc, 2 -> monster, 3 -> object
 	public int maxLife;
 	public int life;
+	public int maxMana;
+	public int mana;
+	public int ammo;
 	public int speed;
 	public int level;
 	public int strength;
@@ -43,9 +45,10 @@ public class Entity { // stores variables that will be used in player, monster a
 	public int defense;
 	public int exp;
 	public int nextLevelExp;
-	public int coin;
+	public int yarn;
 	public Entity currentWeapon;
 	public Entity currentShield;
+	public Projectile projectile;
 	// ENTITY STATUS
 	public boolean invincible = false;
 	public boolean attacking = false;
@@ -56,14 +59,29 @@ public class Entity { // stores variables that will be used in player, monster a
 	public int actionLockCounter = 0;
 	public int spriteCounter = 0;
 	public int invincibleCounter = 0;
+	public int shotAvaliableCounter = 0;
 	int dyingCounter = 0;
 	int hpBarCounter = 0;
 	// OBJECT ATTRIBUTES
 	public BufferedImage image, image2, image3; // adding an image
 	public String name; // name of the object
 	// ITEM ATTRIBUTES
+	public int value;
 	public int attackValue;
 	public int defenseValue;
+	public String description = "";
+	public int useCost;
+	// TYPE
+	public int type;
+	public final int type_player = 0;
+	public final int type_npc = 1;
+	public final int type_monster = 2;
+	public final int type_sword = 3;
+	public final int type_axe = 4;
+	public final int type_shield = 5;
+	public final int type_consumable = 6;
+	public final int type_pickUpOnly = 7;
+	public final int type_blockade = 8;
 	
 	
 	public Entity(GamePanel gp) {
@@ -96,6 +114,22 @@ public class Entity { // stores variables that will be used in player, monster a
 			direction = "left";
 			break;
 		}
+	}
+	
+	public void use(Entity entity) {} // method for using an item or object
+	public void checkDrop() {} // checks the item drop
+	
+	public void dropItem(Entity droppedItem) { // makes items droppable
+		
+		for (int i = 0; i < gp.obj.length; i++) {
+			if(gp.obj[i] == null) {
+				gp.obj[i] = droppedItem;
+				// set the position of the drop
+				gp.obj[i].worldX = worldX;
+				gp.obj[i].worldY = worldY;
+				break;
+			}
+		}
 	} 
 	
 	public void update() { // updates the entities status
@@ -108,16 +142,12 @@ public class Entity { // stores variables that will be used in player, monster a
 		gp.cChecker.checkObject(this, false);
 		gp.cChecker.checkEntity(this, gp.npc);
 		gp.cChecker.checkEntity(this, gp.monster);
+		gp.cChecker.checkEntity(this, gp.iTile);
 		boolean contactPlayer = gp.cChecker.checkPlayer(this);
 		
 		// if a monster makes contact with the player, the player is hit
-		if (this.type == 2 && contactPlayer == true) {
-			if (gp.player.invincible == false) {
-				gp.player.life -= 1;
-				gp.playSE(4);
-				gp.player.invincible = true;
-			}
-			
+		if (this.type == type_monster && contactPlayer == true) {
+			damagePlayer(attack);
 		}
 		
 		// if the collision is false, the player can move, so we change the variables for movement (worldX and worldY)
@@ -145,6 +175,23 @@ public class Entity { // stores variables that will be used in player, monster a
 				invincibleCounter = 0;
 				invincible = false;
 			}
+		}
+		
+		if (shotAvaliableCounter < 30) {
+			shotAvaliableCounter++;
+		}
+	}
+	
+	public void damagePlayer(int attack) {
+		
+		if (gp.player.invincible == false) {
+			
+			int damage = attack - gp.player.defense; // calculate damage
+			if (damage < 0) { damage = 0; }
+			
+			gp.player.life -= damage;
+			gp.playSE(4);
+			gp.player.invincible = true;
 		}
 	}
 	
@@ -200,17 +247,17 @@ public class Entity { // stores variables that will be used in player, monster a
 			// makes the entity transparent when invincible (animation)
 			if (invincible == true) {
 				if (invincibleCounter >= 0 && invincibleCounter < 10) {
-					changeAlpha(g2, 0.4f);
+					changeAlpha(g2, 1f);
 				} else if (invincibleCounter >= 10 && invincibleCounter < 20) {
-					changeAlpha(g2, 1f);
+					changeAlpha(g2, 0.4f);
 				} else if (invincibleCounter >= 20 && invincibleCounter < 30) {
-					changeAlpha(g2, 0.4f);
+					changeAlpha(g2, 1f);
 				} else if (invincibleCounter >= 30 && invincibleCounter < 40) {
-					changeAlpha(g2, 1f);
-				} else if (invincibleCounter >= 40 && invincibleCounter < 50) {
 					changeAlpha(g2, 0.4f);
-				} else if (invincibleCounter >= 50 && invincibleCounter < 60) {
+				} else if (invincibleCounter >= 40 && invincibleCounter < 50) {
 					changeAlpha(g2, 1f);
+				} else if (invincibleCounter >= 50 && invincibleCounter < 60) {
+					changeAlpha(g2, 0.4f);
 				}
 				
 				hpBarOn = true;
@@ -223,10 +270,8 @@ public class Entity { // stores variables that will be used in player, monster a
 			}
 			
 			// draw entity image
-			g2.drawImage(image, screenX, screenY, gp.tileSize, gp.tileSize, null);
-			
-			// reset invincibility state
-			g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
+			g2.drawImage(image, screenX, screenY, null);
+			changeAlpha(g2, 1F);
 		
 		}
 	}
@@ -245,7 +290,6 @@ public class Entity { // stores variables that will be used in player, monster a
 		if (dyingCounter > i*6 && dyingCounter <= i*7) { changeAlpha(g2, 1f); }
 		if (dyingCounter > i*7 && dyingCounter <= i*8) { changeAlpha(g2, 0f); }
 		if (dyingCounter > i*8) {
-			dying = false;
 			alive = false;
 		}
 	}

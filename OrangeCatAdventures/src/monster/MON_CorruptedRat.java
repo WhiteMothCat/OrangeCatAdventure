@@ -4,6 +4,8 @@ import java.util.Random;
 
 import entity.Entity;
 import main.GamePanel;
+import object.OBJ_Life;
+import object.OBJ_Yarn_1;
 
 public class MON_CorruptedRat extends Entity{
 	
@@ -14,11 +16,14 @@ public class MON_CorruptedRat extends Entity{
 		this.gp = gp;
 		
 		// STATS
-		type = 2;
+		type = type_monster;
 		name = "Corrupted Rat";
 		speed = 2;
 		maxLife = 4;
 		life = maxLife;
+		attack = 3;
+		defense = 0;
+		exp = 2;
 		// COLLISON
 		solidArea.x = gp.tileSize*1/16;
 		solidArea.y = gp.tileSize/2;
@@ -75,5 +80,18 @@ public class MON_CorruptedRat extends Entity{
 //		}
 		direction = gp.player.direction; // the monster gets away from the player
 		
+	}
+	
+	public void checkDrop() {
+		
+		int i = new Random().nextInt(100)+1; // random number between 1 and 100
+		
+		// set monster drop
+		if (i < 75) {
+			dropItem(new OBJ_Yarn_1(gp));
+		}
+		if (i >= 75) {
+			dropItem(new OBJ_Life(gp));
+		}
 	}
 }
