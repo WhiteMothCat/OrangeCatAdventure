@@ -16,6 +16,8 @@ This repository was created to let people play the Orange Cat Adventure videogam
 - __ENTER__ for attacking, interacting (dialogues or NPCs) and selecting in menu.
 - __P__ to pause the game.
 - __C__ to see the character stats.
+- __F__ to throw fireballs.
+- __ESC__ to open the settings menu.
 - __Protip:__ if ENTER and W are both pressed at the same time over yellow flowers the character regenerates it's life.
 
 ### Other controls for develpment only
