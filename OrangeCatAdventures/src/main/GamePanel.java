@@ -12,16 +12,25 @@ import javax.swing.JPanel;
 import entity.Entity;
 import entity.Player;
 import tile.TileManager;
+import tile_interactive.InteractiveTile;
 
 // COLOR PALETTE: endesga 32 palette
 // LIST OF THINGS TO ADD:
-// - Animation when there is no movement
+// - Animation when there is no movement and when monsters attack
 // - Fix the problem regarding the solid area of superObject
 // - Create dialogue sprites
 // - Player animation when hit (not transparent)
 // - Different sound effect depending on which monster is hit
 // - When some monsters die they become NPCs (ex: CorruptedRat into Rat) or just change the dying animation (new sprites)
 // - Make a better character status window
+// - When leveling up, add levelUp points so you can expend them on abilities or stats
+// - Make some weapons have good and bad things (ex: +3 attack, -1 speed ) and have better swing sprites
+// - Fix problem when scaling (text)
+// - Add spell casting (make player select which spells and which key, add mana for usage)
+// - Create different types of yarn that count different (like zelda's rupees)
+// - Add collectables all over the map to upgrade inventory or stats (like kolog seeds)
+// - Under the monsters add a symbol with the value of the defense next to the life for the player to know
+// - Make monsters drop more than one item
 
 public class GamePanel extends JPanel implements Runnable{
 	
@@ -43,6 +52,7 @@ public class GamePanel extends JPanel implements Runnable{
 	
 	// FPS
 	public int FPS = 60;
+	public int actualFPS;
 	
 	// SYSTEM
 	TileManager tileM = new TileManager(this);
@@ -57,10 +67,12 @@ public class GamePanel extends JPanel implements Runnable{
 	
 	// ENTITY AND OBJECT
 	public Player player = new Player(this, keyH);
-	public Entity obj[] = new Entity[10]; // size depending on the number of objects that can be displayed
+	public Entity obj[] = new Entity[30]; // size depending on the number of objects that can be displayed
 	public Entity npc[] = new Entity[10]; // table for storing entities
 	public Entity monster[] = new Entity[20]; 
-	ArrayList<Entity> entityList = new ArrayList<>(); // list of all entities to sort the order of drawing
+	public InteractiveTile iTile[] = new InteractiveTile[20];
+	public ArrayList<Entity> projectileList = new ArrayList<>();
+	public ArrayList<Entity> entityList = new ArrayList<>(); // list of all entities to sort the order of drawing
 	
 	// GAME STATE
 	public int gameState; // sets the state of the game
@@ -86,6 +98,7 @@ public class GamePanel extends JPanel implements Runnable{
 		aSetter.setObject();
 		aSetter.setNPC();
 		aSetter.setMonster();
+		aSetter.setInteractiveTile();
 		// playMusic(0);
 		gameState = titleState;
 	}
@@ -154,6 +167,7 @@ public class GamePanel extends JPanel implements Runnable{
 			
 			if (timer > 1000000000) {
 				// System.out.println("FPS: " + drawCount); // see the current FPS
+				actualFPS = drawCount;
 				drawCount = 0;
 				timer = 0;
 			}
@@ -180,8 +194,26 @@ public class GamePanel extends JPanel implements Runnable{
 						monster[i].update(); // update the monster
 					}
 					if (monster[i].alive == false) {
+						monster[i].checkDrop();
 						monster[i] = null; // monster died
 					}
+				}
+			}
+			// PROJECTILE
+			for (int i = 0; i < projectileList.size(); i++) {
+				if (projectileList.get(i) != null) { // if there is a registered monster (avoids NullPointer)
+					if (projectileList.get(i).alive == true) {
+						projectileList.get(i).update(); // update the monster
+					}
+					if (projectileList.get(i).alive == false) {
+						projectileList.remove(i); // monster died
+					}
+				}
+			}
+			// INTERACTIVE TILE
+			for (int i = 0; i < iTile.length; i++) {
+				if (iTile[i] != null) { // if there is a registered iTile (avoids NullPointer)
+					iTile[i].update();
 				}
 			}
 		}
@@ -199,7 +231,7 @@ public class GamePanel extends JPanel implements Runnable{
 		
 		//DEBUG
 		long drawStart = 0;
-		if (keyH.checkDrawTime == true) {
+		if (keyH.showDebugText == true) {
 			drawStart = System.nanoTime();
 		}
 		// TITLE SCREEN
@@ -210,7 +242,12 @@ public class GamePanel extends JPanel implements Runnable{
 		} else {
 			
 			// TILES
-			tileM.draw(g2);
+			tileM.draw(g2); // normal tiles
+			for (int i = 0; i < iTile.length; i++) { // interactive tiles
+				if (iTile[i] != null) {
+					iTile[i].draw(g2);
+				}
+			}
 			
 			// ENTITIES
 			// add the components
@@ -228,6 +265,11 @@ public class GamePanel extends JPanel implements Runnable{
 			for(int i = 0; i < monster.length; i++) { // objects
 				if (monster[i] != null) {
 					entityList.add(monster[i]);
+				}
+			}
+			for(int i = 0; i < projectileList.size(); i++) { // projectiles
+				if (projectileList.get(i) != null) {
+					entityList.add(projectileList.get(i));
 				}
 			}
 			// sort the components
@@ -250,27 +292,33 @@ public class GamePanel extends JPanel implements Runnable{
 		}
 			
 		// check time passed
-		if (keyH.checkDrawTime == true) {
+		if (keyH.showDebugText == true) {
 			long drawEnd = System.nanoTime();
 			long passed = drawEnd - drawStart;
+			
+			g2.setFont(ui.byteBounce.deriveFont(30f));
 			g2.setColor(Color.white);
-			g2.drawString("DrawTime: " + passed, 10, 400);
+			int x = tileSize, y = tileSize*7, lineHeight = 20 + scale;
+			
+			g2.drawString("WorldX: " + player.worldX, x, y); y += lineHeight;
+			g2.drawString("WorldY: " + player.worldY, x, y); y += lineHeight;
+			g2.drawString("WorldCol: " + (player.worldX+player.solidArea.x)/tileSize, x, y); y += lineHeight;
+			g2.drawString("WorldRow: " + (player.worldY+player.solidArea.y)/tileSize, x, y); y += lineHeight;
+			g2.drawString("FPS: " + actualFPS, x, y); y += lineHeight;
+			g2.drawString("DrawTime: " + passed, x, y);
 		}
 		
 		
 		g2.dispose(); // releases any system resources that is using
 	}
 	
-	
-	
 	// MUSIC AND SOUND METHODS
-	
 	public void playMusic(int i) { // plays the background / loop music
 		
 		// first we set the file, play the song and loop it
-		music.setFile(i);
-		music.play();
-		music.loop();
+//		music.setFile(i);
+//		music.play();
+//		music.loop();
 	}
 	
 	public void stopMusic() {

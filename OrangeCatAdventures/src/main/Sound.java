@@ -20,9 +20,12 @@ public class Sound {
 		soundURL[3] = getClass().getResource("/sound/PowerUp_1.wav"); // power up sound effect
 		soundURL[4] = getClass().getResource("/sound/Hit_1.wav"); // hit sound effect
 		soundURL[5] = getClass().getResource("/sound/Closed_1.wav"); // closed sound effect
-		soundURL[6] = getClass().getResource("/sound/Select.wav"); // closed sound effect
-		soundURL[7] = getClass().getResource("/sound/Hit_2.wav"); // attack monster
-		soundURL[8] = getClass().getResource("/sound/SwingSword_1.wav"); // swing sword
+		soundURL[6] = getClass().getResource("/sound/Select.wav"); // select sound effect
+		soundURL[7] = getClass().getResource("/sound/Hit_2.wav"); // attack monster sound effect
+		soundURL[8] = getClass().getResource("/sound/SwingSword_1.wav"); // swing sword sound effect
+		soundURL[9] = getClass().getResource("/sound/LevelUp_1.wav"); // leveling up sound effect
+		soundURL[10] = getClass().getResource("/sound/Burning_1.wav"); // burning sound effect
+//		soundURL[11] = getClass().getResource("/sound/..."); // tree cut sound effect
 	}
 	
 	public void setFile(int i) { // format for opening an audio file

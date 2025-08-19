@@ -112,24 +112,29 @@ public class EventHandler {
 		gp.ui.currentDialogue = "You fell into a pit";
 		gp.player.life--;
 		gp.playSE(4);
+		gp.player.invincible = true;
 	}
 	
 	public void damageFromTileOrObject(int Col, int Row, int gameState, int hurtAmount) {
-		gp.gameState = gameState;
-		gp.ui.currentDialogue = "You got hit";
+//		gp.gameState = gameState;
+//		gp.ui.currentDialogue = "You got hit";
 		gp.player.life -= hurtAmount;
 		gp.playSE(4);
 		canTouchEvent = false;
+		gp.player.invincible = true;
+		gp.ui.addMessage("You got damaged");
 	}
 	
 	public void healingPool(int Col, int Row, int gameState) { // player regenerates life
 		
 		if(gp.keyH.enterPressed == true) {
 			gp.gameState = gameState;
-			gp.ui.currentDialogue = "The mystical waters of the pond restores \nyour life";
+			gp.ui.currentDialogue = "The mystical waters of the pond restores \nyour life and mana";
 			gp.player.life = gp.player.maxLife;
+			gp.player.mana = gp.player.maxMana;
 			gp.playSE(3);
 			gp.player.attackCanceled = true;
+//			gp.aSetter.setMonster(); // to respawn the monsters
 		}
 	}
 }

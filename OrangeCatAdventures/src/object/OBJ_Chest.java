@@ -9,8 +9,9 @@ public class OBJ_Chest extends Entity{
 		
 		super(gp);
 		
+		type = type_blockade;
 		name = "chest";
-		down1 = setup("/objects/chest_1", gp.tileSize, gp.tileSize);
+		down1 = setup("/tiles_interactive/chest_1", gp.tileSize, gp.tileSize);
 		
 		// collision settings
 		collision = true;
