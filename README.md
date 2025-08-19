@@ -5,7 +5,7 @@ This repository was created to let people play the Orange Cat Adventure videogam
 ## How to run the game 🎮
 
 1. Download the `.jar` file from the repository
-2. Make sure you have Java installed: _https://www.java.com/en/download/_
+2. Make sure you have Java installed: _https://www.java.com/en/download/_ (in case this one doesn't work on your computer download from _https://www.oracle.com/java/technologies/downloads/_)
 3. Run the game by double-clicking the `.jar`, or run this in terminal: `java -jar OrangeCatAdventures.jar`
 
 ## About the game 📖
